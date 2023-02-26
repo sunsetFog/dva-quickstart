@@ -1,0 +1,6 @@
+/* 
+:global(*)全局作用域   :local(*)局部作用域
+ */
+.radish, :global(.radish) {
+    color: chartreuse;
+}
