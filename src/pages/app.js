@@ -1,3 +1,4 @@
+// React应该是底层在调用，得引入
 import React, {useEffect} from 'react';
 import { connect } from 'dva';
 import { Route, Switch, withRouter } from 'dva/router';
@@ -6,6 +7,8 @@ import Login from '../pages/login/index';
 import Frog from '../pages/frog/index';
 // 引入接口
 import {query} from '../services/example'
+
+import PropTypes from 'prop-types'
 
 
 
@@ -24,6 +27,10 @@ import {query} from '../services/example'
 
 // 有类组件和函数组件
 function App(props) {
+    console.log("App-props", props);
+    const {state, dispatch, history} = props;
+    const {list} = state;
+    
     // 发送接口获得数据，并把数据存到vuex里
     useEffect(()=>{
         dispatch({
@@ -37,9 +44,7 @@ function App(props) {
         console.log("后端数据：", data);
     }
 
-    console.log("App-props", props);
-    const {state, dispatch, history} = props;
-    const {list} = state;
+    
     // 删除函数
     const deleteList = (index) => {
         const arr = [...list];
@@ -101,19 +106,20 @@ function App(props) {
     );
   }
 
-    // 设置属性默认值
-    App.defaultProps = {
+// 设置属性默认值
+App.defaultProps = {
+    colors: '蓝色'
+};
+// 设置属性类型约束
+App.propTypes = {
+    colors: PropTypes.string
+};
 
-    };
-    // 设置属性类型约束
-    App.propTypes = {
-    };
-
-  function mapStateToProps(params) {
-      console.log("-mapStateToProps-", params);
-      return {
-          state: params.example
-      }
-  }
-  // props对象加入了state,dispatch,history属性   history用于跳转
-  export default connect(mapStateToProps)(withRouter(App));
+function mapStateToProps(params) {
+    console.log("-mapStateToProps-", params);
+    return {
+        state: params.example
+    }
+}
+// props对象加入了state,dispatch,history属性   history用于跳转
+export default connect(mapStateToProps)(withRouter(App));
